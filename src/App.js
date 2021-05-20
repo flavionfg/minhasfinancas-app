@@ -1,16 +1,13 @@
 import React from 'react';
 
+import 'bootswatch/dist/flatly/bootstrap.css'
+
 class App extends React.Component {
-
-  state = {
-    nome : 'Flavio'
-  }
-
   render(){
     return(
       <div>
-          <label>Hello {this.state.nome} </label>
-      </div>
+      <button type="button" className="btn btn-primary">Primary</button>
+    </div>
     )
   }
 }
