@@ -18,7 +18,6 @@ class CadastroUsuario extends React.Component{
 
     render(){
         return(
-            <div className="container">
                 <Card title="Cadastro de Usuario">
                    <div className="row">
                        <div className="col-lg-l2">
@@ -57,7 +56,6 @@ class CadastroUsuario extends React.Component{
                        </div>
                    </div>
                 </Card>
-            </div>
         )
     }
 }
