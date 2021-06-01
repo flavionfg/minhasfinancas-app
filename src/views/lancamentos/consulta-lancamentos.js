@@ -1,9 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import Card from '../components/card'
-import FormGroup from '../components/form-group'
-import SelectMenu from '../components/selectMenu'
-
+import Card from '../../components/card'
+import FormGroup from '../../components/form-group'
+import SelectMenu from '../../components/selectMenu'
+import LancamentosTable from './lancamentosTable'
 
 class ConsultaLancamentos extends React.Component{
 
@@ -35,6 +35,10 @@ class ConsultaLancamentos extends React.Component{
 
         ]
 
+        const lancamentos = [
+            { id : 1, descricao : 'Salario', valor: 5000, mes: 1, tipo: 'Receita', status: 'Efetivado' }
+        ]
+
         return(
             <Card title="Consulta Lancaçmentos">
                 <div className="row">
@@ -55,6 +59,21 @@ class ConsultaLancamentos extends React.Component{
                             <FormGroup htmlFor="inputTipo" label="Tipo Lancamento: ">
                                 <SelectMenu id="inputTipo" className="form-control" lista={tipos} />
                             </FormGroup>
+
+                            <br/>
+
+                            <button type="button" className="btn btn-success">Buscar</button>
+                            <button type="button" className="btn btn-danger">Cadastrar</button>
+
+                        </div>
+
+                    </div>
+                </div>
+                <br/>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="bs-component">
+                            <LancamentosTable Lancamentos={lancamentos} />
                         </div>
                     </div>
                 </div>
