@@ -19,7 +19,7 @@ class ConsultaLancamentos extends React.Component{
         descricao: '',
         lancamentos : []
     }
-
+    
     constructor(){
         super();
         this.service = new LacamentoService();
@@ -44,7 +44,7 @@ class ConsultaLancamentos extends React.Component{
 
         this.service.consultar(lancamentoFiltro)
                     .then( response => {
-                    this.setState({ lancamentos: response.data }) //até a linha de cima ta ok
+                    this.setState({ lancamentos: response.data })
                 }).catch( error => {
                     console.log(error.data)
                 })
@@ -54,8 +54,17 @@ class ConsultaLancamentos extends React.Component{
          console.log('editando o lancamento ' , id)
      }
 
-     deletar = (id) => {
-         console.log('deletando o lancamento ', id)
+     deletar = ( lancamento ) => {
+         this.service.deletar(lancamento) //no curso é passado lancamento.id, mas pra min não funcionou.
+                .then(response => {
+                const lancamentos = this.state.lancamentos;
+                const index = lancamentos.indexOf(lancamento)
+                lancamentos.splice(index, 1);
+                this.setState(lancamentos)
+                 messages.mensagemSucesso('Lançamento deletado com sucesso!')
+             }).catch(error => {
+                 messages.mensagemErro('Ocorreu um erro ao tentar deletar o Lançamento')
+             })
      }
 
     render(){

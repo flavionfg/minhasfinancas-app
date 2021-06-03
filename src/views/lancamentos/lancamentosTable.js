@@ -4,7 +4,7 @@ import currencyFormatter from 'currency-formatter'
 export default props => {
  
     const rows = props.lancamentos.map(lancamento => {
-
+        
         return (
             <tr key={ lancamento.id }>
                 <td>{ lancamento.descricao }</td>

@@ -57,4 +57,8 @@ export default class LacamentoService extends ApiService {
 
         return this.get(params);
     }
+
+    deletar(id){
+        return this.delete(`/${id}`)
+    }
 }
