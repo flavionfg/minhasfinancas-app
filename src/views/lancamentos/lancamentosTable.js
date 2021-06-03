@@ -1,18 +1,17 @@
 import React from 'react'
 
 export default props => {
+ 
+    const rows = props.lancamentos.map(lancamento => {
 
-    const rows = props.Lancamentos.map( lancamento => {
         return (
-            <tr key={lancamento.id}>
-                <td>{lancamento.descricao}</td>
-                <td>{lancamento.valor}</td>
-                <td>{lancamento.tipo}</td>
-                <td>{lancamento.mes}</td>
-                <td>{lancamento.status}</td>
-                <td>
-
-                </td>
+            <tr key={ lancamento.id }>
+                <td>{ lancamento.descricao }</td>
+                <td>{ lancamento.valor }</td>
+                <td>{ lancamento.tipo }</td>
+                <td>{ lancamento.mes }</td>
+                <td>{ lancamento.status }</td>
+                <td></td>
             </tr>
         )
     } )
@@ -30,7 +29,7 @@ export default props => {
                 </tr>
             </thead>
             <tbody>
-                {rows}
+                { rows }
             </tbody>
         </table>
     )

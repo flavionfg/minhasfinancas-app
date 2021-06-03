@@ -5,17 +5,42 @@ import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/selectMenu'
 import LancamentosTable from './lancamentosTable'
 
+import LacamentoService from '../../app/services/lancamentoService'
+import localStorageService from '../../app/services/localstorageService'
+
 class ConsultaLancamentos extends React.Component{
 
     state = {
         ano: '',
         mes: '',
-        tipo: ''
+        tipo: '',
+        lancamentos : []
+    }
+
+    constructor(){
+        super();
+        this.service = new LacamentoService();
     }
 
     buscar = () => {
-        console.log(this.state)
-    }
+        
+        const usuarioLogado = localStorageService.obterItem('_usuario_logado');
+
+        const lancamentoFiltro = {
+            ano: this.state.ano,
+            mes: this.state.mes,
+            tipo: this.state.tipo,
+            usuario: usuarioLogado.id
+        }
+
+        this.service.consultar(lancamentoFiltro)
+                    .then( response => {
+                    this.setState({ lancamentos: response.data }) //até a linha de cima ta ok
+                    console.log("teste : " + response.data)
+                }).catch( error => {
+                    console.log(error.data)
+                })
+     }
 
     render(){
 
@@ -45,12 +70,8 @@ class ConsultaLancamentos extends React.Component{
 
         ]
 
-        const lancamentos = [
-            { id : 1, descricao : 'Salario', valor: 5000, mes: 1, tipo: 'Receita', status: 'Efetivado' }
-        ]
-
         return(
-            <Card title="Consulta Lancaçmentos">
+            <Card title="Consulta Lançamentos">
                 <div className="row">
                     <div className="cold-md-6">
                         <div className="bs-component">
@@ -58,7 +79,7 @@ class ConsultaLancamentos extends React.Component{
                                 <input type="text" 
                                         className="form-control" 
                                         value={this.state.ano}
-                                        onChange={e => this.setState({ano: e.target.value})}
+                                        onChange={e => this.setState({ ano: e.target.value })}
                                         id="exampleInputEmail"
                                         placeholder="Digite o Ano"/>
 
@@ -92,7 +113,7 @@ class ConsultaLancamentos extends React.Component{
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LancamentosTable Lancamentos={lancamentos} />
+                            <LancamentosTable lancamentos={this.state.lancamentos} />
                         </div>
                     </div>
                 </div>

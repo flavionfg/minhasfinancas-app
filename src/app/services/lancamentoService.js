@@ -7,21 +7,25 @@ export default class LacamentoService extends ApiService {
     }
 
     consultar(lancamentoFiltro){
-        
-        let params = `?ano=&{lancamentoFiltro.ano}`
-
-        if(lancamentoFiltro.tipo){
-            params = `${params}&mes=${lancamentoFiltro.tipo}`
-        }
+        let params = `?ano=${lancamentoFiltro.ano}`
 
         if(lancamentoFiltro.mes){
-            params = `${params}&tipo=${lancamentoFiltro.mes}`
+            params = `${params}&mes=${lancamentoFiltro.mes}`
+        }
+
+        if(lancamentoFiltro.tipo){
+            params = `${params}&tipo=${lancamentoFiltro.tipo}`
         }
 
         if(lancamentoFiltro.status){
             params = `${params}&status=${lancamentoFiltro.status}`
         }
 
-        return this.get(params)
+        if(lancamentoFiltro.usuario){
+            params = `${params}&usuario=${lancamentoFiltro.usuario}`
+        }
+        console.log("PARAMS: " + params)
+        
+        return this.get(params);
     }
 }
