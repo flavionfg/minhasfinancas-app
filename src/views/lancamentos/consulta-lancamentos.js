@@ -8,12 +8,15 @@ import LancamentosTable from './lancamentosTable'
 import LacamentoService from '../../app/services/lancamentoService'
 import localStorageService from '../../app/services/localstorageService'
 
+import * as messages from '../../components/toastr'
+
 class ConsultaLancamentos extends React.Component{
 
     state = {
         ano: '',
         mes: '',
         tipo: '',
+        descricao: '',
         lancamentos : []
     }
 
@@ -24,19 +27,24 @@ class ConsultaLancamentos extends React.Component{
 
     buscar = () => {
         
+        if(!this.state.ano){
+            messages.mensagemErro('o preenchimento do campo Ano é obrigatório.')
+            return false;
+        }
+
         const usuarioLogado = localStorageService.obterItem('_usuario_logado');
 
         const lancamentoFiltro = {
             ano: this.state.ano,
             mes: this.state.mes,
             tipo: this.state.tipo,
+            descricao: this.state.descricao,
             usuario: usuarioLogado.id
         }
 
         this.service.consultar(lancamentoFiltro)
                     .then( response => {
                     this.setState({ lancamentos: response.data }) //até a linha de cima ta ok
-                    console.log("teste : " + response.data)
                 }).catch( error => {
                     console.log(error.data)
                 })
@@ -44,31 +52,9 @@ class ConsultaLancamentos extends React.Component{
 
     render(){
 
-        const meses = [
+        const meses = this.service.obterListaMeses();
 
-            { label: 'Selecione...', value: ''},
-            { label: 'Janeiro', value: 1 },
-            { label: 'Fevereiro', value: 2 },
-            { label: 'Marco', value: 3 },
-            { label: 'Abril', value: 4 },
-            { label: 'Maio', value: 5 },
-            { label: 'Junho', value: 6 },
-            { label: 'Julho', value: 7 },
-            { label: 'Agosto', value: 8 },
-            { label: 'Setembro', value: 9 },
-            { label: 'Outrubro', value: 10 },
-            { label: 'Novembro', value: 11 },
-            { label: 'Dezembro', value: 12 },
-
-        ]
-
-        const tipos = [
-
-            { label : 'Selecione...', value: '' },
-            { label : 'Despesa', value: 'DESPESA' },
-            { label : 'Receita', value: 'RECEITA' }
-
-        ]
+        const tipos = this.service.obterListaTipos();
 
         return(
             <Card title="Consulta Lançamentos">
@@ -90,6 +76,15 @@ class ConsultaLancamentos extends React.Component{
                                             onChange={e => this.setState({ mes: e.target.value })}
                                             className="form-control" 
                                             lista={meses} />
+                            </FormGroup>
+
+                            <FormGroup htmlFor="inputDescricao" label="Descrição: ">
+                                     <input type="text"     
+                                            id="inputDescricao" 
+                                            value={this.state.descricao}
+                                            onChange={e => this.setState({ descricao: e.target.value })}
+                                            className="form-control" 
+                                            placeholder="Digite uma descrição" />
                             </FormGroup>
 
                             <FormGroup htmlFor="inputTipo" label="Tipo Lancamento: ">
