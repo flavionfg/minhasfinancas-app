@@ -1,14 +1,17 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+
 import Card from '../../components/card'
 import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/selectMenu'
 import LancamentosTable from './lancamentosTable'
-
 import LacamentoService from '../../app/services/lancamentoService'
 import localStorageService from '../../app/services/localstorageService'
 
 import * as messages from '../../components/toastr'
+
+import {Dialog} from 'primereact/dialog';
+import { Button } from 'primereact/button';
 
 class ConsultaLancamentos extends React.Component{
 
@@ -17,6 +20,8 @@ class ConsultaLancamentos extends React.Component{
         mes: '',
         tipo: '',
         descricao: '',
+        showConfirmDialog: false,
+        lancamentoDeletar: {},
         lancamentos : []
     }
     
@@ -54,13 +59,22 @@ class ConsultaLancamentos extends React.Component{
          console.log('editando o lancamento ' , id)
      }
 
-     deletar = ( lancamento ) => {
-         this.service.deletar(lancamento) //no curso é passado lancamento.id, mas pra min não funcionou.
+     
+     abrirConfirmacao = (lancamento) => {
+         this.setState({ showConfirmDialog : true, lancamentoDeletar: lancamento })
+     }
+
+     CancelarDelecao = () => {
+        this.setState({ showConfirmDialog : false, lancamentoDeletar: {} })
+     }
+
+     deletar = () => {
+         this.service.deletar(this.state.lancamentoDeletar) //no curso é passado lancamento.id, mas pra min não funcionou.
                 .then(response => {
                 const lancamentos = this.state.lancamentos;
-                const index = lancamentos.indexOf(lancamento)
+                const index = lancamentos.indexOf(this.lancamentoDeletar)
                 lancamentos.splice(index, 1);
-                this.setState(lancamentos)
+                this.setState( { lancamentos: lancamentos, showConfirmDialog: false} )
                  messages.mensagemSucesso('Lançamento deletado com sucesso!')
              }).catch(error => {
                  messages.mensagemErro('Ocorreu um erro ao tentar deletar o Lançamento')
@@ -72,6 +86,14 @@ class ConsultaLancamentos extends React.Component{
         const meses = this.service.obterListaMeses();
 
         const tipos = this.service.obterListaTipos();
+
+        const confirmDialogFooter = (
+            <div>
+                <Button label="Confirmar" icon="pi pi-check" onClick={this.deletar} />
+                <Button label="Cancelar" icon="pi pi-times" onClick={this.CancelarDelecao}
+                        className="p-button-secondary" />
+            </div>
+        );
 
         return(
             <Card title="Consulta Lançamentos">
@@ -126,10 +148,20 @@ class ConsultaLancamentos extends React.Component{
                     <div className="col-md-12">
                         <div className="bs-component">
                             <LancamentosTable lancamentos={this.state.lancamentos}
-                                              deleteAction={this.deletar}
+                                              deleteAction={this.abrirConfirmacao}
                                               editAction={this.editar} />
                         </div>
                     </div>
+                </div>
+                <div>
+                <Dialog header="Confirmação" 
+                        visible={this.state.showConfirmDialog} 
+                        style={{ width: '50vw' }} 
+                        footer={confirmDialogFooter}
+                        modal={true}
+                        onHide={() => this.setState({showConfirmDialog: false})}>
+                    Confirma a exclusão deste lançamento?
+                </Dialog>
                 </div>
             </Card>
         )
