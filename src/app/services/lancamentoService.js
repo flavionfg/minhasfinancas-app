@@ -1,6 +1,6 @@
 import ApiService from '../apiservice'
 
-export default class LacamentoService extends ApiService {
+export default class LancamentoService extends ApiService {
 
     constructor(){
         super('/api/lancamentos')
@@ -30,6 +30,10 @@ export default class LacamentoService extends ApiService {
             { label : 'Despesa', value: 'DESPESA' },
             { label : 'Receita', value: 'RECEITA' }
         ]
+    }
+
+    salvar(lancamento){
+        return this.post('/', lancamento);
     }
 
     consultar(lancamentoFiltro){
