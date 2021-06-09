@@ -14,7 +14,7 @@ import LocalStorageService from '../../app//services/localstorageService'
 class CadastroLancamentos extends React.Component {
 
     state = {
-        id: null,
+        id: '',
         descricao: '',
         valor: '',
         mes: '',
@@ -26,6 +26,11 @@ class CadastroLancamentos extends React.Component {
     constructor(){
         super();
         this.service = new LancamentoService();
+    }
+
+    componentDidMount(){
+        const params = this.props.match.params
+        console.log(params)
     }
 
     submit = () => {
@@ -125,8 +130,10 @@ class CadastroLancamentos extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         <br />
-                        <button onClick={this.submit} className="btn btn-success">Salvar</button>
-                        <button onClick={e => this.props.history.push('/consulta-lancamentos')}className="btn btn-danger">Cancelar</button>
+                        <button onClick={this.submit} 
+                                className="btn btn-success">Salvar</button>
+                        <button onClick={e => this.props.history.push('/consulta-lancamentos')}
+                                className="btn btn-danger">Cancelar</button>
                     </div>
                 </div>
             </Card>

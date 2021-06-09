@@ -56,10 +56,9 @@ class ConsultaLancamentos extends React.Component{
      }
 
      editar = (id) => {
-         console.log('editando o lancamento ' , id)
+        this.props.history.push(`/cadastro-lancamentos/${id}`)
      }
 
-     
      abrirConfirmacao = (lancamento) => {
          this.setState({ showConfirmDialog : true, lancamentoDeletar: lancamento })
      }
@@ -152,8 +151,8 @@ class ConsultaLancamentos extends React.Component{
                     <div className="col-md-12">
                         <div className="bs-component">
                             <LancamentosTable lancamentos={this.state.lancamentos}
-                                              deleteAction={this.abrirConfirmacao}
-                                              editAction={this.editar} />
+                                              deletar={this.abrirConfirmacao}
+                                              editar={this.editar} />
                         </div>
                     </div>
                 </div>
