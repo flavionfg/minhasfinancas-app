@@ -21,7 +21,8 @@ class CadastroLancamentos extends React.Component {
         ano: '',
         tipo: '',
         status: '',
-        usuario: null
+        usuario: null,
+        atualizando: false
     }
 
     constructor(){
@@ -35,7 +36,7 @@ class CadastroLancamentos extends React.Component {
             this.service
                 .obterPorId(params.id)
                 .then(response => {
-                    this.setState( {...response.data} )
+                    this.setState( {...response.data, atualizando: true} )
                     console.log("response.data : ", response.data)
                 })
                 .catch(erros =>{
@@ -89,7 +90,7 @@ class CadastroLancamentos extends React.Component {
         const meses = this.service.obterListaMeses();
 
         return(
-            <Card title="Cadastro de Lançamento">
+            <Card title={ this.state.atualizando ? 'Atualização de Lançamento' : 'Cadastro de Lancamento' }>
                 <div className="row">
                         <div className="col-md-12">
                             <FormGroup id="inputDescricao" label="Descrição: *">
@@ -156,10 +157,15 @@ class CadastroLancamentos extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         <br />
-                        <button onClick={this.submit} 
+                        { this.state.atualizando ?
+                            (
+                                <button onClick={this.atualizar} 
+                                className="btn btn-primary">Atualizar</button> 
+                            ) : (
+                                <button onClick={this.submit} 
                                 className="btn btn-success">Salvar</button>
-                        <button onClick={this.atualizar} 
-                                className="btn btn-primary">Atualizar</button>                                
+                            )
+                        }                         
                         <button onClick={e => this.props.history.push('/consulta-lancamentos')}
                                 className="btn btn-danger">Cancelar</button>
                     </div>
