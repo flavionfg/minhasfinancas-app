@@ -20,7 +20,8 @@ class CadastroLancamentos extends React.Component {
         mes: '',
         ano: '',
         tipo: '',
-        status: ''
+        status: '',
+        usuario: null
     }
 
     constructor(){
@@ -30,7 +31,18 @@ class CadastroLancamentos extends React.Component {
 
     componentDidMount(){
         const params = this.props.match.params
-        console.log(params)
+        if(params.id){
+            this.service
+                .obterPorId(params.id)
+                .then(response => {
+                    this.setState( {...response.data} )
+                    console.log("response.data : ", response.data)
+                })
+                .catch(erros =>{
+                    console.log("entrou no erro")
+                    messages.mensagemErro(erros.response.data)
+                })
+        }
     }
 
     submit = () => {
@@ -45,6 +57,20 @@ class CadastroLancamentos extends React.Component {
             .then(response => {
                 this.props.history.push('/consulta-lancamentos')
                 messages.mensagemSucesso('Lancamento cadastrado com sucesso!')
+            }).catch(error =>{
+                messages.mensagemErro(error.response.data)
+            })
+    }
+
+    atualizar = () => {
+        const { descricao, valor, mes, ano, tipo, status, usuario , id } = this.state;
+        const lancamento = { descricao, valor, mes, ano, tipo, usuario, status, id };
+        
+        this.service
+            .atualizar(lancamento)
+            .then(response => {
+                this.props.history.push('/consulta-lancamentos')
+                messages.mensagemSucesso('Lancamento atualizado com sucesso!')
             }).catch(error =>{
                 messages.mensagemErro(error.response.data)
             })
@@ -132,6 +158,8 @@ class CadastroLancamentos extends React.Component {
                         <br />
                         <button onClick={this.submit} 
                                 className="btn btn-success">Salvar</button>
+                        <button onClick={this.atualizar} 
+                                className="btn btn-primary">Atualizar</button>                                
                         <button onClick={e => this.props.history.push('/consulta-lancamentos')}
                                 className="btn btn-danger">Cancelar</button>
                     </div>
