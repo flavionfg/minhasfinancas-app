@@ -47,18 +47,25 @@ class CadastroLancamentos extends React.Component {
     }
 
     submit = () => {
-
-        const usuarioLogado = LocalStorageService.obterItem('_usuario_logado');
+        const usuarioLogado = LocalStorageService.obterItem('_usuario_logado')
 
         const { descricao, valor, mes, ano, tipo } = this.state;
         const lancamento = { descricao, valor, mes, ano, tipo, usuario: usuarioLogado.id };
+
+        try{
+            this.service.validar(lancamento)
+        }catch(erro){
+            const mensagens = erro.mensagens;
+            mensagens.forEach(msg => messages.mensagemErro(msg));
+            return false;
+        }   
         
         this.service
             .salvar(lancamento)
             .then(response => {
                 this.props.history.push('/consulta-lancamentos')
-                messages.mensagemSucesso('Lancamento cadastrado com sucesso!')
-            }).catch(error =>{
+                messages.mensagemSucesso('Lançamento cadastrado com sucesso!')
+            }).catch(error => {
                 messages.mensagemErro(error.response.data)
             })
     }
