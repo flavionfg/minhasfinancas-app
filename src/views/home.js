@@ -3,6 +3,7 @@ import React from 'react'
 
 import UsuarioService from '../app/services/usuarioService'
 import localStorageService from '../app/services/localstorageService'
+import { AuthContext } from '../main/provedorAutenticao'
 
 
 class Home extends React.Component{
@@ -17,7 +18,7 @@ class Home extends React.Component{
     }
 
     componentDidMount(){
-        const usuarioLogado = localStorageService.obterItem('_usuario_logado')
+        const usuarioLogado = this.context.usuarioAutenticado
 
         this.UsuarioService
         .obterSaldoPorIdUsuario(usuarioLogado.id)
@@ -51,5 +52,7 @@ class Home extends React.Component{
         )
     }
 }
+
+Home.contextType = AuthContext;
 
 export default Home
